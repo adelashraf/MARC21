@@ -180,9 +180,6 @@ try:
                                 print '264 #4 $c ', t260y.replace('\xc2\xa9', '')[0:4]
 
                         x3 = x3 + 1
-            if 'www' in lista[x1]:
-                print '856 4# $u', lista[x1]
-
             if "Copyright" in lista[x1]:
                 if x in range(0, 15):
                     year = lista[x1:x1 + 7]
