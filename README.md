@@ -2,7 +2,7 @@
 Create automatic MARC 21 record for files 
 the only supported language is english for now.
 # How to Use it :
-$~ python libBot.py file.pdf 
+~$ python libBot.py 'file.pdf' 
 # what is required for this tool to work :
 * [__Python 2.7.x__](http://python.org/getit/).
 * [__PyPDF2__](https://github.com/mstamy2/PyPDF2).
