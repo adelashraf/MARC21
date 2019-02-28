@@ -1,6 +1,6 @@
 # MARC21
 Create automatic MARC 21 record for files 
-the only supported language is english for now.
+the only supported language is english and all language for metadata only .
 # How to Use it :
 ~$ python libBot.py 'file.pdf' 
 # what is required for this tool to work :
