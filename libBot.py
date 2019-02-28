@@ -41,7 +41,7 @@ try:
         print B, '650', W, ' ## $a ', title.subject.encode("utf-8")
 
     if '/Keywords' in str(title.keys()):
-        print B, '650', W, ' ## $a ', title.subject.encode("utf-8")
+        print B, '650', W, ' ## $a ', title['/Keywords'].encode("utf-8")
 
     print '300 ## $a', num, 'Pages. ;$c m.'
     """
