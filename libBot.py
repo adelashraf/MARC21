@@ -17,7 +17,7 @@ try:
 
     out = fileReader.outlines
     title = fileReader.getDocumentInfo()
-    print G, 'Scanning The pdf file \n ', W
+    print G, '\nScanning The pdf file \n ', W
     if '/CreationDate' in str(title.keys()):
         print '005', title['/CreationDate'].replace('D:', '')
 
@@ -25,28 +25,27 @@ try:
     print '007 cu#mn#---anuua'
 
     if '/ModDate' in str(title.keys()):
-        print '008', title['/ModDate'][4:10], 's', title['/ModDate'][2:6], '####xx######s----#101#0#', 'eng', '#'
+        print '008', title['/ModDate'][4:10], 's', title['/ModDate'][2:6], '####xx######s----#101#0#', '---', '#'
         print '040 ## $a DLC'
-        print '041 ## $a eng'
 
     if '/Author' in str(title.keys()):
-        print '100	1# $a ', title.author
+        print '100	1# $a ', title.author.encode("utf-8")
 
     if '/Title' in str(title.keys()):
         if '/Author' in str(title.keys()):
-            print '245 10 $a', str(title.title).replace(':', ' :$b '), ' /$c ', str(title.author)
+            print '245 10 $a', str(title.title.encode("utf-8")).replace(':', ' :$b '), ' /$c ', str(title.author.encode("utf-8"))
         else:
-            print '245 10 $a', title.title
+            print '245 10 $a', title.title.encode("utf-8")
 
     if '/Subject' in str(title.keys()):
-        print B, '650', W, ' ## $a ', title.subject
+        print B, '650', W, ' ## $a ', title.subject.encode("utf-8")
 
     if '/Keywords' in str(title.keys()):
-        print B, '650', W, ' ## $a ', title.subject
+        print B, '650', W, ' ## $a ', title.subject.encode("utf-8")
 
     print '300 ## $a', num, 'Pages. ;$c m.'
     """
-    #this will be added in the future
+    #400 & 500 Tages
     outlen = len(out)
     y = 0
     while y < outlen:
@@ -59,7 +58,7 @@ try:
         else:
             print B, out[y].title, W
         y = y + 1
-    """
+"""
     num = int(num)
     x = 0
     while x < num:
@@ -69,7 +68,7 @@ try:
         x = x + 1
         text = page.extractText()
         tex = text.encode("utf-8")
-        if "LIBRARY OF CONGRESS CATALOGING-IN-PUBLICATION DATA" in tex:
+        if "LIBRARY OF CONGRESS CATALOGING-IN-PUBLICATION DATA".lower() in tex.lower():
             LOCCIPD = tex[int(tex.index('LIBRARY OF CONGRESS CATALOGING-IN-PUBLICATION DATA')):].replace('\xc5\xa0',
                                                                                                          '--').replace(
                 '\n\n', '\n')
@@ -155,10 +154,10 @@ try:
                                     '\xc2\xa9', '')[0:4]
 
                             if '/Producer' in str(title.keys()):
-                                print '264 #0 $a ', ':$b ', title.producer, ',$c ', t260y.replace('\xc2\xa9', '')[0:4]
+                                print '264 #0 $a ', ':$b ', title.producer.encode("utf-8"), ',$c ', t260y.replace('\xc2\xa9', '')[0:4]
                             elif '/Producer' in str(title.keys()) and '/Creator' in str(title.keys()):
-                                print '264 #0 $a ', ':$b ', title.producer, ',$c ', t260y.replace('\xc2\xa9', '')[
-                                                                                    0:4], '-$3 ', title.creator
+                                print '264 #0 $a ', ':$b ', title.producer.encode("utf-8"), ',$c ', t260y.replace('\xc2\xa9', '')[
+                                                                                    0:4], '-$3 ', title.creator.encode("utf-8")
                             else:
                                 print '264 #4 $c ', t260y.replace('\xc2\xa9', '')[0:4]
 
@@ -172,10 +171,10 @@ try:
                                 year[x3]:
                             t260y = str(year[x3])
                             if '/Producer' in str(title.keys()):
-                                print '264 #0 $a ', ':$b ', title.producer, ',$c ', t260y.replace('\xc2\xa9', '')[0:4]
+                                print '264 #0 $a ', ':$b ', title.producer.encode("utf-8"), ',$c ', t260y.replace('\xc2\xa9', '')[0:4]
                             elif '/Producer' in str(title.keys()) and '/Creator' in str(title.keys()):
-                                print '264 #0 $a ', ':$b ', title.producer, ',$c ', t260y.replace('\xc2\xa9', '')[
-                                                                                    0:4], '-$3 ', title.creator
+                                print '264 #0 $a ', ':$b ', title.producer.encode("utf-8"), ',$c ', t260y.replace('\xc2\xa9', '')[
+                                                                                    0:4], '-$3 ', title.creator.encode("utf-8")
                             else:
                                 print '264 #4 $c ', t260y.replace('\xc2\xa9', '')[0:4]
 
@@ -242,4 +241,7 @@ except IndexError:
     exit()
 except KeyboardInterrupt:
     print R, '\nYou press Ctrl+C', W
+    exit()
+except IOError:
+    print R, 'Please Write The correct Path of Pdf file !', W
     exit()
