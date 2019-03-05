@@ -7,6 +7,11 @@ the only supported language is english and all language for metadata only .
 * [__Python 2.7.x__](http://python.org/getit/).
 * [__PyPDF2__](https://github.com/mstamy2/PyPDF2).
 
+# For use Gui version 
+~$ sh libBot.sh 
+Then choose the pdf file and Wait the Classification result 
+the result save in file result.txt
+
 # For know what is MARC21 :
 * [ __MARC21_ ](http://www.loc.gov/marc/)
 The MARC formats are standards for the representation and communication of bibliographic and related information in machine-readable form.
