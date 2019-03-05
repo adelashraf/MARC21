@@ -1,5 +1,5 @@
 # MARC21
-Create automatic MARC 21 record for files __
+Create automatic MARC 21 record for files  
 the only supported language is english and all language for metadata only .
 # How to Use it :
 ~$ python libBot.py 'file.pdf' 
@@ -8,9 +8,9 @@ the only supported language is english and all language for metadata only .
 * [__PyPDF2__](https://github.com/mstamy2/PyPDF2).
 
 # For use Gui version 
-~$ sh libBot.sh .__
-Then choose the pdf file and Wait the Classification result .__
-the result save in file result.txt.__
+~$ sh libBot.sh .   
+Then choose the pdf file and Wait the Classification result .  
+the result save in file result.txt.   
 
 # For know what is MARC21 :
 * [ __MARC21_ ](http://www.loc.gov/marc/)
