@@ -9,6 +9,7 @@ the only supported language is english and all language for metadata only .
 
 # For use Gui version 
 ~$ sh libBot.sh .   
+   
 Then choose the pdf file and Wait the Classification result .  
 the result save in file result.txt.   
 
