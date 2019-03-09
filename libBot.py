@@ -28,37 +28,31 @@ try:
         print '008', title['/ModDate'][4:10], 's', title['/ModDate'][2:6], '####xx######s----#101#0#', '---', '#'
         print '040 ## $a DLC'
 
+    if '/Producer' in str(title.keys()):
+        print '508 ## $a Software used in production :', title['/Producer']
+
+    if '/Creator' in str(title.keys()):
+        print '508 ## $a software used in creation :', title['/Creator']
+
     if '/Author' in str(title.keys()):
         print '100	1# $a ', title.author.encode("utf-8")
 
     if '/Title' in str(title.keys()):
         if '/Author' in str(title.keys()):
             print '245 10 $a', str(title.title.encode("utf-8")).replace(':', ' :$b '), ' /$c ', str(title.author.encode("utf-8"))
+            if ':' in str(title.title.encode("utf-8")):
+                print '500 ## $a Caption Title'
         else:
             print '245 10 $a', title.title.encode("utf-8")
 
     if '/Subject' in str(title.keys()):
-        print B, '650', W, ' ## $a ', title.subject.encode("utf-8")
+        print '650', '## $a ', title.subject.encode("utf-8")
 
     if '/Keywords' in str(title.keys()):
-        print B, '650', W, ' ## $a ', title['/Keywords'].encode("utf-8")
+        print '650', '## $a ', title['/Keywords'].encode("utf-8")
 
     print '300 ## $a', num, 'Pages. ;$c m.'
-    """
-    #400 & 500 Tages
-    outlen = len(out)
-    y = 0
-    while y < outlen:
-        if '[' in str(out[y]):
-            out1 = out[y]
-            y1 = 0
-            while y1 < len(out1):
-                print B, ' -', W, out1[y1].title
-                y1 =y1 +1
-        else:
-            print B, out[y].title, W
-        y = y + 1
-"""
+
     num = int(num)
     x = 0
     while x < num:
@@ -77,16 +71,17 @@ try:
             while x2 < len(LOCCIPd):
                 if 'eISBN' in LOCCIPd[x2]:
                     print '020 ## $a', LOCCIPd[x2].replace('eISBN', '').replace('-', '')
-                    print B, '650', W, ' #0 $a', LOCCIPd[x2 + 1].replace('1.', '').replace('2.', '').replace('.',
+                    print '650', '#0 $a', LOCCIPd[x2 + 1].replace('1.', '').replace('2.', '').replace('.',
                                                                                                              '').replace(
                         '--', '-')
 
                 if ',' in LOCCIPd[x2] and '.' in LOCCIPd[x2]:
-                    print '100	1# $a', LOCCIPd[x2]
+                    print '100 1# $a', LOCCIPd[x2]
 
                 if ':' in LOCCIPd[x2] and '/' in LOCCIPd[x2] and '.' in LOCCIPd[x2]:
                     print '245 10 $a', LOCCIPd[x2].replace(':', ':$b').replace('/', '/$c')
                     print '250 ## $a', LOCCIPd[x2 + 1][int(LOCCIPd[x2 + 1].index('--')):].replace('--', '')
+                    print '500 ## $a Caption Title'
 
                 if 'p.' in LOCCIPd[x2] and 'm.' in LOCCIPd[x2]:
                     print '300 ## $a', num, LOCCIPd[x2].replace('m.', ';$c m.')
@@ -233,7 +228,78 @@ try:
                         print '250 ## $a', ed[int(ed.index('edition')) - 6:]
 
             x1 = x1 + 1
-    print B, '\n', '*', W, '80% mistake percentage, do not depend on it '
+    outlen = len(out)
+    contenttype = []
+    realcontent = ''
+    y = 0
+    while y < outlen:
+        if '[' in str(out[y]):
+            out1 = out[y]
+            y1 = 0
+            while y1 < len(out1):
+                if '[' in str(out1[y1]):
+                    out2 = out1[y1]
+                    y2 = 0
+                    while y2 < len(out2):
+                        realcontent += str(B+ '  --'+ W+ out2[y2].title.encode("utf-8")+ '\n')
+                        y2 = y2 + 1
+
+                else:
+                    realcontent += str(B+ ' -'+ W+ out1[y1].title.encode("utf-8")+ '\n')
+
+                y1 =y1 +1
+        else:
+            realcontent += str(B+ out[y].title.encode("utf-8")+ W+ '\n')
+            contenttype.append(str(out[y].title.encode("utf-8")).lower())
+            if 'isbn' in str(out[y]).lower():
+                print '020 ## $a', str(out[y].title.encode("utf-8")).lower().replace('isbn', '').replace('-', '')
+
+            if 'contents' in str(out[y]).lower():
+                print '500 ## $a includes contents'
+
+            if 'acknowledgments' in str(out[y]).lower():
+                print '500 ## $a includes acknowledgments'
+
+            if 'introduction' in str(out[y]).lower():
+                print '500 ## $a includes Introduction'
+
+            if 'map' in str(out[y]).lower():
+                print '500 ## $a includes map'
+
+            if 'preface' in str(out[y]).lower():
+                print '500 ## $a includes Preface'
+
+            if 'appendix' in str(out[y]).lower():
+                print '500 ## $a includes Appendix'
+
+            if 'references' in str(out[y]).lower():
+                print '500 ## $a includes References'
+
+            if 'photo credits' in str(out[y]).lower():
+                print '500 ## $a includes Photo Credits'
+
+            if 'index' in str(out[y]).lower():
+                print '500 ## $a includes Index'
+
+            if 'name index' in str(out[y]).lower():
+                print '510 1# $a name index'
+
+            if 'subject index' in str(out[y]).lower():
+                print '510 1# $a Subject index'
+
+            if 'bibliography' in str(out[y]).lower():
+                print '504 ## $a Bibliography'
+
+        y = y + 1
+    if 'contents' in contenttype:
+        print '505 0# $a', str(contenttype[int(contenttype.index('contents')):]).replace("'contents',", '').replace("'", '').replace('[', '').replace(']', '').replace("\r", '').replace(',', '--').replace(' ', '-').replace('part', 'P.')
+    elif 'contents' in str(contenttype):
+        print '505 0# $a', str(contenttype[2:]).replace("'contents',", '').replace("'", '').replace('[', '').replace(']', '').replace("\r", '').replace(',', '--').replace(' ', '-').replace('part', 'P.')
+    else:
+        print '505 0# $a', str(contenttype).replace("'", '').replace('[', '').replace(']', '').replace("\r", '').replace(',', '--').replace(' ', '-').replace('part', 'P.')
+
+    #print '__'*15
+    #print '\n', realcontent
     print G, "\n finish!", W
 except IndexError:
     print R + "please write the name of pdf file" + W
