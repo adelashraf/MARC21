@@ -4,6 +4,7 @@ the only supported language is english and all language for metadata only .
 # How to Use it :
 ~$ python libBot.py 'file.pdf' 
 # Execution
+Write this commands for execute the CLI Script :   
 wget https://raw.githubusercontent.com/adelashraf/MARC21/master/libBot.py    
 chmod +x libBot.py   
 ./libBot.py   
