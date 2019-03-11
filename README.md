@@ -3,6 +3,10 @@ Create automatic MARC 21 record for files
 the only supported language is english and all language for metadata only .
 # How to Use it :
 ~$ python libBot.py 'file.pdf' 
+# Execution
+wget https://raw.githubusercontent.com/adelashraf/MARC21/master/libBot.py    
+chmod +x libBot.py   
+./libBot.py   
 # what is required for this tool to work :
 * [__Python 2.7.x__](http://python.org/getit/).
 * [__PyPDF2__](https://github.com/mstamy2/PyPDF2).
