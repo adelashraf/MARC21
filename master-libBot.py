@@ -29,21 +29,14 @@ try:
         print '040 ## $a DLC'
 
     if '/Producer' in str(title.keys()):
-        print '508 ## $a Software used in production :', title['/Producer']
+        print '508 ## $a Software used in production :', title['/Producer'].encode("utf-8")
 
     if '/Creator' in str(title.keys()):
-        print '508 ## $a software used in creation :', title['/Creator']
+        print '508 ## $a software used in creation :', title['/Creator'].encode("utf-8")
 
     if '/Author' in str(title.keys()):
         print '100	1# $a ', title.author.encode("utf-8")
 
-    if '/Title' in str(title.keys()):
-        if '/Author' in str(title.keys()):
-            print '245 10 $a', str(title.title.encode("utf-8")).replace(':', ' :$b '), ' /$c ', str(title.author.encode("utf-8"))
-            if ':' in str(title.title.encode("utf-8")):
-                print '500 ## $a Caption Title'
-        else:
-            print '245 10 $a', title.title.encode("utf-8")
 
     if '/Subject' in str(title.keys()):
         print '650', '## $a ', title.subject.encode("utf-8")
@@ -68,19 +61,30 @@ try:
             degree = 'master degree'
             print '041 ## $a ara , $b ara , $b eng'
             print '546 ## $a The Text in arabic and English '
+        #elif 'master' in str(lista)
         x1 = 0
         listlen = int(len(lista))
         #print lista
-        if 'university' in lista and 'faculty' in lista and 'department' in lista:
+        if 'university' in lista and 'faculty' in lista and 'department' in lista or 'university' in lista and 'faculty' in lista:
             while x1 < listlen:
                 if 'university' in lista[x1] and 'faculty' in lista[x1+1]:
-                    v = x1+1
-                    while v<listlen:
+                    print '502 ## $a Thesis $b', degree, '--$c',  ' '.join(lista[x1-1:x1+5]), ',$d', title['/CreationDate'].replace('D:', '')[0:4]
+                    print '539 ## $a', title['/CreationDate'].replace('D:', '')[0:4]
+                    print '533 ## $a National Network of University Letters . $b EG :$c Ain Shams University Archives ,$d', title['/CreationDate'].replace('D:', '')[0:4]
+                elif 'university' in lista[x1] and 'faculty' in lista[x1+1] and 'department' in lista:
+                    v = x1 + 1
+                    while v < listlen:
                         if 'department' in lista[v]:
-                            print '502 ## $a Thesis $b', degree, '--$c',  ' '.join(lista[x1-1:v+1]), ',$d', title['/CreationDate'].replace('D:', '')[0:4]
+                            print '502 ## $a Thesis $b', degree, '--$c', ' '.join(lista[x1 - 1:v + 1]), ',$d', title['/CreationDate'].replace('D:', '')[0:4]
                             print '539 ## $a', title['/CreationDate'].replace('D:', '')[0:4]
-                            print '533 ## $a National Network of University Letters . $b EG :$c Ain Shams University Archives ,$d', title['/CreationDate'].replace('D:', '')[0:4]
-                        v = v+1
+                            print '533 ## $a National Network of University Letters . $b EG :$c Ain Shams University Archives ,$d', \
+                            title['/CreationDate'].replace('D:', '')[0:4]
+
+                        v = v + 1
+
+
+
+
 
                 if 'degree' in lista[x1] and 'in' in lista[x1+1]:
                     print '650 ## $a', lista[x1+2], lista[x1+3]
@@ -95,6 +99,10 @@ try:
 
                                 v2 = v2 + 1
                         v1 = v1 + 1
+                elif 'degree' in lista[x1] and 'of' in lista[x1+1] and 'in' in lista[x1+3]:
+                    print '650 ## $a', lista[x1+4], lista[x1+5]
+                elif 'degree' in lista[x1] and 'of' in lista[x1+1] and 'of' in lista[x1+3]:
+                    print '650 ## $a', lista[x1 + 4], lista[x1 + 5]
 
                 if 'http' in lista[x1]:
                     print '856 4# $u', lista[x1]
@@ -168,8 +176,8 @@ try:
         print '505 0# $a', str(contenttype[int(contenttype.index('contents')):]).replace("'contents',", '').replace("'", '').replace('[', '').replace(']', '').replace("\r", '').replace(',', '--').replace(' ', '-').replace('part', 'P.')
     elif 'contents' in str(contenttype):
         print '505 0# $a', str(contenttype[2:]).replace("'contents',", '').replace("'", '').replace('[', '').replace(']', '').replace("\r", '').replace(',', '--').replace(' ', '-').replace('part', 'P.')
-    else:
-        print '505 0# $a', str(contenttype).replace("'", '').replace('[', '').replace(']', '').replace("\r", '').replace(',', '--').replace(' ', '-').replace('part', 'P.')
+    #else:
+    #    print '505 0# $a', str(contenttype).replace("'", '').replace('[', '').replace(']', '').replace("\r", '').replace(',', '--').replace(' ', '-').replace('part', 'P.')
 
     if '\xd9\x81\xd9\x87\xd8\xb1\xd8\xb3' in realcontent.lower():
         print '500 ## $a includes index'
