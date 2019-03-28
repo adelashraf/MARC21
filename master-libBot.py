@@ -19,14 +19,14 @@ try:
     title = fileReader.getDocumentInfo()
     print G, '\nScanning The pdf file \n ', W
     if '/CreationDate' in str(title.keys()):
-        print '005', title['/CreationDate'].replace('D:', '')
+        print '005', title['/CreationDate'].replace('D:', '')[0:14]
 
     print '006 m#####s----#101#0#'
     print '007 cu#mn#---anuua'
 
     if '/ModDate' in str(title.keys()):
-        print '008', title['/ModDate'][4:10], 's', title['/ModDate'][2:6], '####xx######s----#101#0#', 'ara', '#'
-        print '040 ## $a DLC'
+        print '008', title['/ModDate'][4:10]+ 's'+ title['/ModDate'][2:6]+ '####xx#ka##frmb###000#0#'+ 'eng'+ '#'+ 'c'
+        print '040 ## $a EG-EULC , $c EG-EULC , $a NAME'
 
     if '/Producer' in str(title.keys()):
         print '508 ## $a Software used in production :', title['/Producer'].encode("utf-8")
@@ -34,17 +34,13 @@ try:
     if '/Creator' in str(title.keys()):
         print '508 ## $a software used in creation :', title['/Creator'].encode("utf-8")
 
-    if '/Author' in str(title.keys()):
-        print '100	1# $a ', title.author.encode("utf-8")
-
-
     if '/Subject' in str(title.keys()):
         print '650', '## $a ', title.subject.encode("utf-8")
 
     if '/Keywords' in str(title.keys()):
         print '650', '## $a ', title['/Keywords'].encode("utf-8")
 
-    print '300 ## $a', num, 'Leaves. ;$c m.'
+    print '300 ## $a', num, 'p. ;$c cm.'
 
     num = int(num)
     x = 0
@@ -59,55 +55,70 @@ try:
 
         if 'master' in str(lista) and 'degree' in str(lista):
             degree = 'master degree'
-            print '041 ## $a ara , $b ara , $b eng'
+            print '041 ## $a ara , $b ara , $b eng ,$a NAME'
             print '546 ## $a The Text in arabic and English '
-        #elif 'master' in str(lista)
+        else:
+            degree = 'NONE'
         x1 = 0
         listlen = int(len(lista))
         #print lista
-        if 'university' in lista and 'faculty' in lista and 'department' in lista or 'university' in lista and 'faculty' in lista:
-            while x1 < listlen:
-                if 'university' in lista[x1] and 'faculty' in lista[x1+1]:
-                    print '502 ## $a Thesis $b', degree, '--$c',  ' '.join(lista[x1-1:x1+5]), ',$d', title['/CreationDate'].replace('D:', '')[0:4]
-                    print '539 ## $a', title['/CreationDate'].replace('D:', '')[0:4]
-                    print '533 ## $a National Network of University Letters . $b EG :$c Ain Shams University Archives ,$d', title['/CreationDate'].replace('D:', '')[0:4]
-                elif 'university' in lista[x1] and 'faculty' in lista[x1+1] and 'department' in lista:
-                    v = x1 + 1
-                    while v < listlen:
-                        if 'department' in lista[v]:
-                            print '502 ## $a Thesis $b', degree, '--$c', ' '.join(lista[x1 - 1:v + 1]), ',$d', title['/CreationDate'].replace('D:', '')[0:4]
-                            print '539 ## $a', title['/CreationDate'].replace('D:', '')[0:4]
-                            print '533 ## $a National Network of University Letters . $b EG :$c Ain Shams University Archives ,$d', \
-                            title['/CreationDate'].replace('D:', '')[0:4]
+        #if 'university' in lista and 'faculty' in lista and 'department' in lista or 'university' in lista and 'faculty' in lista:
+        while x1 < listlen:
+            if 'university' in lista[x1] and 'faculty' in lista[x1 + 1] and 'department' in lista:
+                v = x1 + 1
+                while v < listlen:
+                    if 'department' in lista[v]:
+                        print '502 ## $a Thesis $b', degree, '--$c', ' '.join(lista[x1 - 1:v + 1]), ',$d', title['/CreationDate'].replace('D:', '')[0:4]
+                        print '539 ## $a', title['/CreationDate'].replace('D:', '')[0:4]
+                        print '533 ## $a National Network of University Letters . $b EG :$c Ain Shams University Archives ,$d', title['/CreationDate'].replace('D:', '')[0:4]
+                        v4 = v
+                        while v4 < listlen:
+                            if 'by' in lista[v4]:
+                                print '100 1# $a', ' '.join(lista[v4:v4+4]).replace('by', '')
+                                print '245 10 $a', ' '.join(lista[v+1:v4])
+                            v4 = v4 + 1
 
-                        v = v + 1
+                    v = v + 1
 
+            elif 'university' in lista[x1] and 'faculty' in lista[x1 + 1]:
+                print '502 ## $a Thesis $b', degree, '--$c', ' '.join(lista[x1 - 1:x1 + 5]), ',$d', title['/CreationDate'].replace('D:', '')[0:4]
+                print '539 ## $a', title['/CreationDate'].replace('D:', '')[0:4]
+                print '533 ## $a National Network of University Letters . $b EG :$c Ain Shams University Archives ,$d', title['/CreationDate'].replace('D:', '')[0:4]
+                if 'of' in lista[x1 + 2]:
+                    v3 = x1 + 4
+                    while v3 < listlen:
+                        if 'by' in lista[v3]:
+                            feald = lista[x1+4:v3]
+                            if 'supervis' in str(feald):
+                                print '100 1# $a', ' '.join(feald[int(feald.index('by')):len(feald)-1]).replace('by ', '')
+                                print '245 10 $a', ' '.join(feald[:len(feald)-1]).replace('by', '/$c')
 
+                        v3 = v3 + 1
 
+            if 'degree' in lista[x1] and 'in' in lista[x1 + 1]:
+                print '650 ## $a', lista[x1 + 2], lista[x1 + 3]
+                v1 = x1 + 3
+                while v1 < listlen:
+                    if 'by' in lista[v1]:
+                        v2 = v1
+                        while v2 < listlen:
+                            if 'supervis' in lista[v2]:
+                                print '100 1# $a', ' '.join(lista[v1 + 1:v2]), ', $a NAME'
+                                print '245 10 $a', ' '.join(lista[:v1])
+                                print '500 ## $a ', ' '.join(lista[v2:])
 
+                            v2 = v2 + 1
+                    v1 = v1 + 1
+            elif 'degree' in lista[x1] and 'of' in lista[x1 + 1] and 'in' in lista[x1 + 3]:
+                print '650 ## $a', lista[x1 + 4], lista[x1 + 5]
+            elif 'degree' in lista[x1] and 'of' in lista[x1 + 1] and 'of' in lista[x1 + 3]:
+                print '650 ## $a', lista[x1 + 4], lista[x1 + 5]
 
-                if 'degree' in lista[x1] and 'in' in lista[x1+1]:
-                    print '650 ## $a', lista[x1+2], lista[x1+3]
-                    v1 = x1+3
-                    while v1 < listlen:
-                        if 'by' in lista[v1]:
-                            v2 = v1
-                            while v2 < listlen:
-                                if 'supervis' in lista[v2]:
-                                    print '100 1# $a', ' '.join(lista[v1+1:v2])
-                                    print '500 ## $a ', ' '.join(lista[v2:])
+            #if 'http' in lista[x1]:
+            #    print '856 4# $u', lista[x1]
 
-                                v2 = v2 + 1
-                        v1 = v1 + 1
-                elif 'degree' in lista[x1] and 'of' in lista[x1+1] and 'in' in lista[x1+3]:
-                    print '650 ## $a', lista[x1+4], lista[x1+5]
-                elif 'degree' in lista[x1] and 'of' in lista[x1+1] and 'of' in lista[x1+3]:
-                    print '650 ## $a', lista[x1 + 4], lista[x1 + 5]
+            x1 = x1 + 1
 
-                if 'http' in lista[x1]:
-                    print '856 4# $u', lista[x1]
-
-                x1 = x1 + 1
 
     outlen = len(out)
     contenttype = []
