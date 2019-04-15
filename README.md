@@ -1,6 +1,7 @@
 # MARC21
 Create automatic MARC 21 record for files  
-the full retrieve data is supported to english language and all languages retrieved metadata only .
+the full retrieve data is supported to english language and all languages retrieved metadata only .   
+it also can classification thesis (master-libBot.py) with the same way to use the book version.
 # How to Use it :
 ~$ python libBot.py 'file.pdf' 
 # Execution
